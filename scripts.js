@@ -55,8 +55,7 @@ function addGenre(genre) {
         card.setAttribute('data-answer', data.results[0].correct_answer)
         card.setAttribute('data-value', card.getInnerHTML())
       })
-
-    card.addEventListener('click', flipCard)
+      .then((done) => card.addEventListener('click', flipCard))
   })
 }
 
@@ -64,4 +63,52 @@ genres.forEach((genre) => addGenre(genre))
 
 function flipCard() {
   console.log('clickced')
+  const textDispaly = document.createElement('div')
+  const trueButton = document.createElement('button')
+  const falseButton = document.createElement('button')
+
+  trueButton.addEventListener('click', getResult)
+  falseButton.addEventListener('click', getResult)
+
+  trueButton.innerHTML = 'True'
+  falseButton.innerHTML = 'False'
+  textDispaly.innerHTML = this.getAttribute('data-question')
+
+  this.append(textDispaly, trueButton, falseButton)
+
+  const allCards = Array.from(document.querySelectorAll('.card'))
+  allCards.forEach((card) => card.removeEventListener('click', flipCard))
+}
+
+function getResult() {
+  const allCards = Array.from(document.querySelectorAll('.card'))
+  allCards.forEach((card) => card.addEventListener('click', flipCard))
+
+  const cardOfButton = this.parentElement
+  if (cardOfButton.getAttribute('data-answer') === this.innerHTML) {
+    console.log('its a match')
+
+    score = score + parseInt(cardOfButton.getAttribute('data-value'))
+    scoreDisplay.innerHTML = score
+    cardOfButton.classList.add('correct-answer')
+
+    setTimeout(() => {
+      while (cardOfButton.firstChild) {
+        cardOfButton.removeChild(cardOfButton.lastChild)
+      }
+
+      cardOfButton.innerHTML = cardOfButton.getAttribute('data-value')
+    }, 100)
+  } else {
+    cardOfButton.classList.add('wrong-answer')
+    setTimeout(() => {
+      while (cardOfButton.firstChild) {
+        cardOfButton.removeChild(cardOfButton.lastChild)
+      }
+
+      cardOfButton.innerHTML = 0
+    }, 100)
+  }
+
+  cardOfButton.removeEventListener('click', flipCard)
 }

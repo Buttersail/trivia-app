@@ -31,3 +31,11 @@ body {
   padding: 5px;
   margin: 10px;
 }
+
+.correct-answer {
+  background-color: green;
+}
+
+.wrong-answer {
+  background-color: brown;
+}
